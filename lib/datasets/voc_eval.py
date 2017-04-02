@@ -73,13 +73,15 @@ def voc_eval(detpath,
              classname,
              cachedir,
              ovthresh=0.5,
-             use_07_metric=False):
-  """rec, prec, ap = voc_eval(detpath,
-                              annopath,
-                              imagesetfile,
-                              classname,
-                              [ovthresh],
-                              [use_07_metric])
+             use_07_metric=False,
+             has_imagenames=False,
+             imagenames=[]):
+    """rec, prec, ap = voc_eval(detpath,
+                                annopath,
+                                imagesetfile,
+                                classname,
+                                [ovthresh],
+                                [use_07_metric])
 
   Top level function that does the PASCAL VOC evaluation.
 
@@ -104,9 +106,10 @@ def voc_eval(detpath,
     os.mkdir(cachedir)
   cachefile = os.path.join(cachedir, 'annots.pkl')
   # read list of images
-  with open(imagesetfile, 'r') as f:
-    lines = f.readlines()
-  imagenames = [x.strip() for x in lines]
+  if not has_imagenames:
+    with open(imagesetfile, 'r') as f:
+      lines = f.readlines()
+    imagenames = [x.strip() for x in lines]
 
   if not os.path.isfile(cachefile):
     # load annots
