@@ -109,8 +109,8 @@ if __name__ == '__main__':
 
     # model path
     demonet = args.demo_net
-    tfmodel = os.path.join(cfg.DATA_DIR, 'faster_rcnn_models', 'voc_2007_trainval', 'default',
-                              NETS[demonet][0])
+    tfmodel = os.path.join(cfg.ROOT_DIR, 'output', 'vgg16', 'bib_500X500_training', 
+                'default', NETS[demonet][0])
     if not os.path.isfile(tfmodel + '.meta'):
         raise IOError(('{:s} not found.\nDid you run ./data/script/'
                        'fetch_faster_rcnn_models.sh?').format(tfmodel + '.meta'))
