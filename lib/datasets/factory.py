@@ -14,7 +14,7 @@ __sets = {}
 
 from datasets.bib import bib
 from datasets.pascal_voc import pascal_voc
-from datasets.coco import coco
+# from datasets.coco import coco
 
 import numpy as np
 
