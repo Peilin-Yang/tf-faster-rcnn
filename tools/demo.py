@@ -29,14 +29,9 @@ import argparse
 
 from nets.vgg16_depre import vgg16
 
-CLASSES = ('__background__',
-           'aeroplane', 'bicycle', 'bird', 'boat',
-           'bottle', 'bus', 'car', 'cat', 'chair',
-           'cow', 'diningtable', 'dog', 'horse',
-           'motorbike', 'person', 'pottedplant',
-           'sheep', 'sofa', 'train', 'tvmonitor')
+CLASSES = ('__background__', 'bib')
 
-NETS = {'vgg16': ('vgg16_faster_rcnn_iter_70000.ckpt', 'vgg16.weights')}
+NETS = {'vgg16': ('vgg16_faster_rcnn_iter_10000.ckpt', 'vgg16.weights')}
 
 def vis_detections(im, class_name, dets, thresh=0.5):
     """Draw detected bounding boxes."""
@@ -95,7 +90,8 @@ def demo(sess, net, image_name):
                           cls_scores[:, np.newaxis])).astype(np.float32)
         keep = nms(dets, NMS_THRESH)
         dets = dets[keep, :]
-        vis_detections(im, cls, dets, thresh=CONF_THRESH)
+        print(dets)
+        #vis_detections(im, cls, dets, thresh=CONF_THRESH)
 
 def parse_args():
     """Parse input arguments."""
@@ -137,18 +133,17 @@ if __name__ == '__main__':
     else:
         raise NotImplementedError
 
-    net.create_architecture(sess, "TEST", 21, caffe_weight_path=tfweight, 
+    net.create_architecture(sess, "TEST", 2, caffe_weight_path=tfweight, 
                           tag='default', anchor_scales=[8, 16, 32])
     saver = tf.train.Saver()
     saver.restore(sess, tfmodel)
 
     print('Loaded network {:s}'.format(tfmodel))
 
-    im_names = ['000456.jpg', '000542.jpg', '001150.jpg',
-                '001763.jpg', '004545.jpg']
+    im_names = ['1.jpg', '2.jpg', '3.jpg', '4.jpg']
     for im_name in im_names:
         print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         print('Demo for data/demo/{}'.format(im_name))
         demo(sess, net, im_name)
 
-    plt.show()
+    #plt.show()
