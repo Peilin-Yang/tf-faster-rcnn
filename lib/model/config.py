@@ -66,7 +66,7 @@ __C.TRAIN.SCALES = (600,)
 __C.TRAIN.MAX_SIZE = 1000
 
 # Images to use per minibatch
-__C.TRAIN.IMS_PER_BATCH = 2
+__C.TRAIN.IMS_PER_BATCH = 4
 
 # Minibatch size (number of regions of interest [ROIs])
 __C.TRAIN.BATCH_SIZE = 128
@@ -75,11 +75,11 @@ __C.TRAIN.BATCH_SIZE = 128
 __C.TRAIN.FG_FRACTION = 0.25
 
 # Overlap threshold for a ROI to be considered foreground (if >= FG_THRESH)
-__C.TRAIN.FG_THRESH = 0.5
+__C.TRAIN.FG_THRESH = 0.05
 
 # Overlap threshold for a ROI to be considered background (class = 0 if
 # overlap in [LO, HI))
-__C.TRAIN.BG_THRESH_HI = 0.5
+__C.TRAIN.BG_THRESH_HI = 0.9
 __C.TRAIN.BG_THRESH_LO = 0.1
 
 # Use horizontally-flipped images during training?
@@ -90,14 +90,14 @@ __C.TRAIN.BBOX_REG = True
 
 # Overlap required between a ROI and ground-truth box in order for that ROI to
 # be used as a bounding-box regression training example
-__C.TRAIN.BBOX_THRESH = 0.5
+__C.TRAIN.BBOX_THRESH = 0.8
 
 # Iterations between snapshots
 __C.TRAIN.SNAPSHOT_ITERS = 5000
 
 # solver.prototxt specifies the snapshot path prefix, this adds an optional
 # infix to yield the path: <prefix>[_<infix>]_iters_XYZ.caffemodel
-__C.TRAIN.SNAPSHOT_PREFIX = 'res101_faster_rcnn'
+__C.TRAIN.SNAPSHOT_PREFIX = 'vgg16_faster_rcnn'
 # __C.TRAIN.SNAPSHOT_INFIX = ''
 
 # Use a prefetch thread in roi_data_layer.layer
@@ -124,9 +124,9 @@ __C.TRAIN.PROPOSAL_METHOD = 'selective_search'
 # Use RPN to detect objects
 __C.TRAIN.HAS_RPN = False
 # IOU >= thresh: positive example
-__C.TRAIN.RPN_POSITIVE_OVERLAP = 0.7
+__C.TRAIN.RPN_POSITIVE_OVERLAP = 0.8
 # IOU < thresh: negative example
-__C.TRAIN.RPN_NEGATIVE_OVERLAP = 0.3
+__C.TRAIN.RPN_NEGATIVE_OVERLAP = 0.2
 # If an anchor statisfied by positive and negative conditions set to negative
 __C.TRAIN.RPN_CLOBBER_POSITIVES = False
 # Max number of foreground examples

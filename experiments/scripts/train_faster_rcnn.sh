@@ -19,7 +19,9 @@ case ${DATASET} in
     TRAIN_IMDB="bib_500X500_training"
     TEST_IMDB="bib_500X500_testing"
     PT_DIR="bib"
+    STEPSIZE=50000
     ITERS=70000
+    ANCHORS="[8,16,32]"
     ;;
   pascal_voc)
     TRAIN_IMDB="voc_2007_trainval"

@@ -20,6 +20,7 @@ case ${DATASET} in
     TEST_IMDB="bib_500X500_testing"
     PT_DIR="bib"
     ITERS=70000
+    ANCHORS="[8,16,32]"
     ;;
   pascal_voc)
     TRAIN_IMDB="voc_2007_trainval"
