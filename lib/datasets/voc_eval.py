@@ -76,12 +76,12 @@ def voc_eval(detpath,
              use_07_metric=False,
              has_imagenames=False,
              imagenames=[]):
-    """rec, prec, ap = voc_eval(detpath,
-                                annopath,
-                                imagesetfile,
-                                classname,
-                                [ovthresh],
-                                [use_07_metric])
+  """rec, prec, ap = voc_eval(detpath,
+                              annopath,
+                              imagesetfile,
+                              classname,
+                              [ovthresh],
+                              [use_07_metric])
 
   Top level function that does the PASCAL VOC evaluation.
 
