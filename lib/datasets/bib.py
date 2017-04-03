@@ -143,7 +143,7 @@ class bib(imdb):
 
     def _load_rpn_roidb(self, gt_roidb):
         filename = self.config['rpn_file']
-        print 'loading {}'.format(filename)
+        print('loading {}'.format(filename))
         assert os.path.exists(filename), \
                'rpn data not found at: {}'.format(filename)
         with open(filename, 'rb') as f:
@@ -279,9 +279,9 @@ class bib(imdb):
         print('--------------------------------------------------------------')
 
     def _do_matlab_eval(self, output_dir='output'):
-        print '-----------------------------------------------------'
-        print 'Computing results with the official MATLAB eval code.'
-        print '-----------------------------------------------------'
+        print('-----------------------------------------------------')
+        print('Computing results with the official MATLAB eval code.')
+        print('-----------------------------------------------------')
         path = os.path.join(cfg.ROOT_DIR, 'lib', 'datasets',
                             'VOCdevkit-matlab-wrapper')
         cmd = 'cd {} && '.format(path)
