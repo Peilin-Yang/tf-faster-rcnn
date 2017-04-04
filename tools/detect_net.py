@@ -88,17 +88,7 @@ if __name__ == '__main__':
 
     print(('Loading model check point from {:s}').format(args.model))
     print([v.name for v in tf.global_variables()])
-    faster_rcnn_vars = [
-      faster_rcnn_net._image,
-      faster_rcnn_net._im_info,
-      faster_rcnn_net._gt_boxes,
-      # faster_rcnn_net._tag,
-      # faster_rcnn_net._num_classes,
-      # faster_rcnn_net._mode,
-      # faster_rcnn_net._anchor_scales,
-      # faster_rcnn_net._num_scales,
-
-    ]
+    faster_rcnn_vars = [v.name for v in tf.global_variables() if v.startswith(args.faster_rcnn_net)]
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
     print('Loaded.')
