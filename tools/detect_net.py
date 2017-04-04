@@ -96,10 +96,12 @@ if __name__ == '__main__':
 
     faster_rcnn_net.create_architecture(sess, "TEST", 2,  
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
+    print([v.name for v in tf.global_variables()])
     faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
+
 
     num_recog_net = BibRecogNetwork(args.max_per_image)
     num_recog_net.build_network()
