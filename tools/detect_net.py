@@ -91,11 +91,11 @@ if __name__ == '__main__':
       faster_rcnn_net._image,
       faster_rcnn_net._im_info,
       faster_rcnn_net._gt_boxes,
-      faster_rcnn_net._tag,
-      faster_rcnn_net._num_classes,
-      faster_rcnn_net._mode,
-      faster_rcnn_net._anchor_scales,
-      faster_rcnn_net._num_scales,
+      # faster_rcnn_net._tag,
+      # faster_rcnn_net._num_classes,
+      # faster_rcnn_net._mode,
+      # faster_rcnn_net._anchor_scales,
+      # faster_rcnn_net._num_scales,
        
     ]
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
