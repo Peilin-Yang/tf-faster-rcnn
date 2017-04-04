@@ -87,7 +87,7 @@ if __name__ == '__main__':
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
 
     print(('Loading model check point from {:s}').format(args.model))
-    print(tf.global_variables())
+    print([v.name for v in tf.global_variables()])
     faster_rcnn_vars = [
       faster_rcnn_net._image,
       faster_rcnn_net._im_info,
