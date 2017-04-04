@@ -227,7 +227,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                 cropped_blobs = crop_blobs(im, dets)
                 recognitions = num_recognition(sess, num_recog_net, cropped_blobs)
                 for k in xrange(all_boxes[j][i].shape[0]):
-                    num_recognitions[j][i].append(recognitions[k]))
+                    num_recognitions[j][i].append(recognitions[k])
 
     for cls_ind, cls in enumerate(imdb.classes):
         if cls == '__background__':
