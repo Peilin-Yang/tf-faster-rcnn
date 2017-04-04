@@ -93,7 +93,7 @@ if __name__ == '__main__':
     print([v.name for v in tf.global_variables()])
     print(args.faster_rcnn_net)
     print(len(args.model), args.model)
-    faster_rcnn_vars = [v.name for v in tf.global_variables() 
+    faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
     print(faster_rcnn_vars)
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
