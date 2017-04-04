@@ -189,7 +189,7 @@ def detect(sess, faster_rcnn_net, imdb, max_per_image=100, thresh=0.05):
   for cls_ind, cls in enumerate(imdb.classes):
       if cls == '__background__':
           continue        
-      print('Writing detection results file for class {}: {}'.format(cls, output_fn))
+      print('Writing detection results file for class {}'.format(cls))
       for im_ind, index in enumerate(imdb.image_index):
           dets = all_boxes[cls_ind][im_ind]
           if dets == []:
