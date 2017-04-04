@@ -83,7 +83,7 @@ if __name__ == '__main__':
       raise NotImplementedError
     # load model
 
-    faster_rcnn_net.create_architecture(sess, "TEST", imdb.num_classes,  
+    faster_rcnn_net.create_architecture(sess, "TEST", 2,  
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
 
     print(('Loading model check point from {:s}').format(args.model))
