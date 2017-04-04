@@ -11,7 +11,7 @@ from datasets.imdb import imdb
 class bib_detect(imdb):
     def __init__(self, root): # `root` could be either a folder or a file
         imdb.__init__(self, 'bib_detect')
-        self._root = root
+        self._root = os.path.abspath(root)
         self._classes = ('__background__', # always index 0
                          'bib')
         self._image_ext = '.jpg'
@@ -40,6 +40,7 @@ class bib_detect(imdb):
         """
 
         image_index = []
+        print(self._root)
         if os.path.isdir(self._root):
             for root, dirs, files in os.walk(self._root):
                 for name in files:
