@@ -148,7 +148,7 @@ def crop_blobs(im, detections, img_w=64, img_h=64, channels=3, padding=5):
                     max(1, int(bbox[0]-padding)):min(im.shape[1], int(bbox[2]+padding))]
         # NOTE: its img[y: y + h, x: x + w] and *not* img[x: x + w, y: y + h]
         resized = cv2.resize(crop_img, (img_w, img_h))
-        blob[i, 0:img_w, 0:img_h, :] = resized
+        blobs[i, 0:img_w, 0:img_h, :] = resized
 
     return blobs
 
