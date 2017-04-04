@@ -31,7 +31,7 @@ def parse_args():
             help='model(s) to test. If provided one model then we \
             only do Faster R-CNN. If two models are provided then \
             we do both Faster R-CNN and BibRecognition',
-            required=True, type=str, nargs='?')
+            required=True, type=str, nargs='+')
   parser.add_argument('--num_dets', dest='max_per_image',
             help='max number of detections per image',
             default=100, type=int)
