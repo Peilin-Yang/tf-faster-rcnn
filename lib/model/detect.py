@@ -138,67 +138,109 @@ def apply_nms(all_boxes, thresh):
       nms_boxes[cls_ind][im_ind] = dets[keep, :].copy()
   return nms_boxes
 
+
+def crop_blobs(im, detections, img_w=64, img_h=64, channels=3, padding=5):
+    blobs = np.zeros((detections.shape[0], img_w, img_h, channels),
+                  dtype=np.float32)
+    for k in xrange(detections.shape[0]):
+        bbox = detections[k]
+        crop_img = im[max(1, int(bbox[1]-padding)):min(im.shape[0], int(bbox[3]+padding)), 
+                    max(1, int(bbox[0]-padding)):min(im.shape[1], int(bbox[2]+padding))]
+        # NOTE: its img[y: y + h, x: x + w] and *not* img[x: x + w, y: y + h]
+        resized = cv2.resize(crop_img, (img_w, img_h))
+        blob[i, 0:img_w, 0:img_h, :] = resized
+
+    return blobs
+
+def num_recognition(sess, num_recog_net, blobs):
+    all_recognitions = []
+
+    _t = Timer()
+    _t.tic()
+    res = num_recog_net.predict(sess, blobs)
+    _t.toc()
+
+    for i in range(blobs.shape[0]):
+        l = res[i].tolist()
+        num = ''.join([str(n) for n in l[1:l[0]+2]])
+        all_recognitions.append('%s' % (num))
+
+    return all_recognitions
+
 def detect(sess, faster_rcnn_net, imdb, num_recog_net=None, 
       max_per_image=100, thresh=0.05):
-  np.random.seed(cfg.RNG_SEED)
-  """Test a Fast R-CNN network on an image database."""
-  num_images = len(imdb.image_index)
-  # all detections are collected into:
-  #  all_boxes[cls][image] = N x 5 array of detections in
-  #  (x1, y1, x2, y2, score)
-  all_boxes = [[[] for _ in range(num_images)]
+    np.random.seed(cfg.RNG_SEED)
+    """Test a Fast R-CNN network on an image database."""
+    num_images = len(imdb.image_index)
+    # all detections are collected into:
+    #  all_boxes[cls][image] = N x 5 array of detections in
+    #  (x1, y1, x2, y2, score)
+    all_boxes = [[[] for _ in range(num_images)]
          for _ in range(imdb.num_classes)]
 
-  # timers
-  _t = {'im_detect' : Timer(), 'misc' : Timer()}
+    # timers
+    _t = {'im_detect' : Timer(), 'recog': Timer(), 'misc' : Timer()}
 
-  for i in range(num_images):
-    im = cv2.imread(imdb.image_path_at(i))
+    for i in range(num_images):
+        im = cv2.imread(imdb.image_path_at(i))
 
-    _t['im_detect'].tic()
-    scores, boxes = im_detect(sess, faster_rcnn_net, im)
-    _t['im_detect'].toc()
+        _t['im_detect'].tic()
+        scores, boxes = im_detect(sess, faster_rcnn_net, im)
+        _t['im_detect'].toc()
 
-    _t['misc'].tic()
+        _t['misc'].tic()
 
-    # skip j = 0, because it's the background class
-    for j in range(1, imdb.num_classes):
-      inds = np.where(scores[:, j] > thresh)[0]
-      cls_scores = scores[inds, j]
-      cls_boxes = boxes[inds, j*4:(j+1)*4]
-      cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
-        .astype(np.float32, copy=False)
-      keep = nms(cls_dets, cfg.TEST.NMS)
-      cls_dets = cls_dets[keep, :]
-      all_boxes[j][i] = cls_dets
-
-    # Limit to max_per_image detections *over all classes*
-    if max_per_image > 0:
-      image_scores = np.hstack([all_boxes[j][i][:, -1]
-                    for j in range(1, imdb.num_classes)])
-      if len(image_scores) > max_per_image:
-        image_thresh = np.sort(image_scores)[-max_per_image]
+        # skip j = 0, because it's the background class
         for j in range(1, imdb.num_classes):
-          keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
-          all_boxes[j][i] = all_boxes[j][i][keep, :]
-    _t['misc'].toc()
+            inds = np.where(scores[:, j] > thresh)[0]
+            cls_scores = scores[inds, j]
+            cls_boxes = boxes[inds, j*4:(j+1)*4]
+            cls_dets = np.hstack((cls_boxes, cls_scores[:, np.newaxis])) \
+            .astype(np.float32, copy=False)
+            keep = nms(cls_dets, cfg.TEST.NMS)
+            cls_dets = cls_dets[keep, :]
+            all_boxes[j][i] = cls_dets
 
-    print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s' \
-        .format(i + 1, num_images, _t['im_detect'].average_time,
-            _t['misc'].average_time))
+        # Limit to max_per_image detections *over all classes*
+        if max_per_image > 0:
+            image_scores = np.hstack([all_boxes[j][i][:, -1]
+                        for j in range(1, imdb.num_classes)])
+            if len(image_scores) > max_per_image:
+                image_thresh = np.sort(image_scores)[-max_per_image]
+                for j in range(1, imdb.num_classes):
+                    keep = np.where(all_boxes[j][i][:, -1] >= image_thresh)[0]
+                    all_boxes[j][i] = all_boxes[j][i][keep, :]
+        _t['misc'].toc()
 
-  for cls_ind, cls in enumerate(imdb.classes):
-      if cls == '__background__':
-          continue        
-      print('Writing detection results file for class {}'.format(cls))
-      for im_ind, index in enumerate(imdb.image_index):
-          dets = all_boxes[cls_ind][im_ind]
-          if dets == []:
+        print('im_detect: {:d}/{:d} {:.3f}s {:.3f}s' \
+            .format(i + 1, num_images, _t['im_detect'].average_time,
+              _t['misc'].average_time))
+
+        # number recognition
+        if num_recog_net:
+            for j in range(1, imdb.num_classes):
+                dets = all_boxes[j][i]
+                if dets == []:
+                    continue 
+                cropped_blobs = crop_blobs(im, dets)
+                recognitions = num_recognition(sess, num_recog_net, cropped_blobs)
+                for k in xrange(all_boxes[j][i].shape[0]):
+                    all_boxes[j][i][k].append(recognitions[k])
+
+
+    for cls_ind, cls in enumerate(imdb.classes):
+        if cls == '__background__':
+            continue        
+        print('Writing detection results file for class {}'.format(cls))
+        for im_ind, index in enumerate(imdb.image_index):
+            dets = all_boxes[cls_ind][im_ind]
+            if dets == []:
               continue
-          # the VOCdevkit expects 1-based indices
-          for k in xrange(dets.shape[0]):
-              print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n'.
-                      format(index, dets[k, -1],
-                             dets[k, 0] + 1, dets[k, 1] + 1,
-                             dets[k, 2] + 1, dets[k, 3] + 1))
+            # the VOCdevkit expects 1-based indices
+            for k in xrange(dets.shape[0]):
+                print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
+                      format(index, dets[k, -2],
+                            dets[k, 0] + 1, dets[k, 1] + 1,
+                            dets[k, 2] + 1, dets[k, 3] + 1),
+                            dets[k, -1])
 
