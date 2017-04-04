@@ -138,7 +138,7 @@ def apply_nms(all_boxes, thresh):
       nms_boxes[cls_ind][im_ind] = dets[keep, :].copy()
   return nms_boxes
 
-def detect(sess, net, imdb, weights_filename, max_per_image=100, thresh=0.05):
+def detect(sess, faster_rcnn_net, imdb, max_per_image=100, thresh=0.05):
   np.random.seed(cfg.RNG_SEED)
   """Test a Fast R-CNN network on an image database."""
   num_images = len(imdb.image_index)
@@ -148,7 +148,6 @@ def detect(sess, net, imdb, weights_filename, max_per_image=100, thresh=0.05):
   all_boxes = [[[] for _ in range(num_images)]
          for _ in range(imdb.num_classes)]
 
-  output_dir = get_output_dir(imdb, weights_filename)
   # timers
   _t = {'im_detect' : Timer(), 'misc' : Timer()}
 
@@ -156,7 +155,7 @@ def detect(sess, net, imdb, weights_filename, max_per_image=100, thresh=0.05):
     im = cv2.imread(imdb.image_path_at(i))
 
     _t['im_detect'].tic()
-    scores, boxes = im_detect(sess, net, im)
+    scores, boxes = im_detect(sess, faster_rcnn_net, im)
     _t['im_detect'].toc()
 
     _t['misc'].tic()
@@ -187,20 +186,18 @@ def detect(sess, net, imdb, weights_filename, max_per_image=100, thresh=0.05):
         .format(i + 1, num_images, _t['im_detect'].average_time,
             _t['misc'].average_time))
 
-  output_fn = os.path.join(output_dir, 'detect.txt')
   for cls_ind, cls in enumerate(imdb.classes):
       if cls == '__background__':
           continue        
       print('Writing detection results file for class {}: {}'.format(cls, output_fn))
-      with open(output_fn, 'wt') as f:
-          for im_ind, index in enumerate(imdb.image_index):
-              dets = all_boxes[cls_ind][im_ind]
-              if dets == []:
-                  continue
-              # the VOCdevkit expects 1-based indices
-              for k in xrange(dets.shape[0]):
-                  f.write('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n'.
-                          format(index, dets[k, -1],
-                                 dets[k, 0] + 1, dets[k, 1] + 1,
-                                 dets[k, 2] + 1, dets[k, 3] + 1))
+      for im_ind, index in enumerate(imdb.image_index):
+          dets = all_boxes[cls_ind][im_ind]
+          if dets == []:
+              continue
+          # the VOCdevkit expects 1-based indices
+          for k in xrange(dets.shape[0]):
+              print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f}\n'.
+                      format(index, dets[k, -1],
+                             dets[k, 0] + 1, dets[k, 1] + 1,
+                             dets[k, 2] + 1, dets[k, 3] + 1))
 

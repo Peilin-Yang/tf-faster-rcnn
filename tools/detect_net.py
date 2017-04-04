@@ -9,6 +9,7 @@ from __future__ import print_function
 
 import _init_paths
 from datasets.bib_detect import bib_detect
+from model.detect import detect
 from model.config import cfg, cfg_from_file, cfg_from_list
 import argparse
 import pprint
@@ -31,6 +32,9 @@ def parse_args():
             help='model(s) to test. If provided one model then we \
             only do Faster R-CNN. If two models are provided then \
             we do both Faster R-CNN and BibRecognition',
+            required=True, type=str, nargs='+')
+  parser.add_argument('--source_files', dest='source_files',
+            help='file or folder of the to be detected image(s)',
             required=True, type=str, nargs='+')
   parser.add_argument('--num_dets', dest='max_per_image',
             help='max number of detections per image',
@@ -89,10 +93,6 @@ if __name__ == '__main__':
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
 
     print(('Loading model check point from {:s}').format(args.model))
-    print([type(v.name) for v in tf.global_variables()])
-    print([v.name for v in tf.global_variables()])
-    print(args.faster_rcnn_net)
-    print(len(args.model), args.model)
     faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
     print(faster_rcnn_vars)
@@ -100,6 +100,7 @@ if __name__ == '__main__':
     faster_rcnn_saver.restore(sess, args.model[0])
     print('Loaded.')
 
-    # test_net(sess, faster_rcnn_net, imdb, filename, max_per_image=args.max_per_image)
+    imdb = bib_detect(args.source_files)
+    detect(sess, faster_rcnn_net, imdb, max_per_image=args.max_per_image)
 
     sess.close()
