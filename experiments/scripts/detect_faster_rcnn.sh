@@ -10,6 +10,6 @@ EXTRA_ARGS=${array[@]:3:$len}
 CUDA_VISIBLE_DEVICES=${GPU_ID} time python ./tools/detect_net.py \
     --model ${NET_FINAL} \
     --cfg experiments/cfgs/${NET}.yml \
-    --net ${NET} \
+    --faster_rcnn_net ${NET} \
     --set ANCHOR_SCALES ${ANCHORS} ${EXTRA_ARGS}
   
