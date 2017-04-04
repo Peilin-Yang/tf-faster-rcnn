@@ -225,7 +225,8 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                 cropped_blobs = crop_blobs(im, dets)
                 recognitions = num_recognition(sess, num_recog_net, cropped_blobs)
                 for k in xrange(all_boxes[j][i].shape[0]):
-                    all_boxes[j][i][k].append(recognitions[k])
+                    print(all_boxes[j][i][k], recognitions[k])
+                    #all_boxes[j][i][k].append(recognitions[k])
 
 
     for cls_ind, cls in enumerate(imdb.classes):
