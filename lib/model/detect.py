@@ -220,6 +220,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
 
         # number recognition
         if num_recog_net:
+            _t['recog'].tic()
             for j in range(1, imdb.num_classes):
                 dets = all_boxes[j][i]
                 if dets == []:
@@ -228,6 +229,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                 recognitions = num_recognition(sess, num_recog_net, cropped_blobs)
                 for k in xrange(all_boxes[j][i].shape[0]):
                     num_recognitions[j][i].append(recognitions[k])
+            _t['recog'].toc()
 
     for cls_ind, cls in enumerate(imdb.classes):
         if cls == '__background__':
@@ -236,10 +238,10 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
         for im_ind, index in enumerate(imdb.image_index):
             dets = all_boxes[cls_ind][im_ind]
             if dets == []:
-              continue
+                continue
             # the VOCdevkit expects 1-based indices
             for k in xrange(dets.shape[0]):
-                print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
+                print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}'.
                       format(index, dets[k, -1],
                             dets[k, 0] + 1, dets[k, 1] + 1,
                             dets[k, 2] + 1, dets[k, 3] + 1,
