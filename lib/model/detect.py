@@ -138,7 +138,8 @@ def apply_nms(all_boxes, thresh):
       nms_boxes[cls_ind][im_ind] = dets[keep, :].copy()
   return nms_boxes
 
-def detect(sess, faster_rcnn_net, imdb, max_per_image=100, thresh=0.05):
+def detect(sess, faster_rcnn_net, imdb, num_recog_net=None, 
+      max_per_image=100, thresh=0.05):
   np.random.seed(cfg.RNG_SEED)
   """Test a Fast R-CNN network on an image database."""
   num_images = len(imdb.image_index)

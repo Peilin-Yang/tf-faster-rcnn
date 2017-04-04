@@ -18,6 +18,7 @@ import time, os, sys
 import tensorflow as tf
 from nets.vgg16 import vgg16
 from nets.res101 import Resnet101
+from nets.numrecog import BibRecogNetwork
 
 def parse_args():
   """
@@ -91,15 +92,25 @@ if __name__ == '__main__':
 
     faster_rcnn_net.create_architecture(sess, "TEST", 2,  
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
-
-    print(('Loading model check point from {:s}').format(args.model))
     faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
+    print(tf.global_variables())
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
-    print('Loaded.')
+
+    num_recog_net = BibRecogNetwork(args.max_per_image)
+    num_recog_net.build_network()
+    print(tf.global_variables())
+    exit()
+    num_recog_vars = [v for v in tf.global_variables() 
+                          if v.name.startswith(faster_rcnn_prefix)]
+    num_recog_saver = tf.train.Saver(num_recog_vars)
+    num_recog_saver.restore(sess, args.model[1])
+
+    print('Models Loaded.')
 
     imdb = bib_detect(args.source_files)
-    detect(sess, faster_rcnn_net, imdb, max_per_image=args.max_per_image)
+    detect(sess, faster_rcnn_net, imdb, 
+        num_net=num_recog_net, max_per_image=args.max_per_image)
 
     sess.close()
