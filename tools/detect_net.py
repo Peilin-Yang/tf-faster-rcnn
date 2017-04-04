@@ -35,7 +35,7 @@ def parse_args():
             required=True, type=str, nargs='+')
   parser.add_argument('--source_files', dest='source_files',
             help='file or folder of the to be detected image(s)',
-            required=True, type=str, nargs='+')
+            required=True, type=str)
   parser.add_argument('--num_dets', dest='max_per_image',
             help='max number of detections per image',
             default=100, type=int)
