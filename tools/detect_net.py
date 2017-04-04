@@ -108,6 +108,7 @@ if __name__ == '__main__':
 
     imdb = bib_detect(args.source_files)
     detect(sess, faster_rcnn_net, imdb, 
-        num_net=num_recog_net, max_per_image=args.max_per_image)
+        num_recog_net=num_recog_net, 
+        max_per_image=args.max_per_image)
 
     sess.close()
