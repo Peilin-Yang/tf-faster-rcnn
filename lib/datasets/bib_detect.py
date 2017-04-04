@@ -10,7 +10,7 @@ from datasets.imdb import imdb
 
 class bib_detect(imdb):
     def __init__(self, root): # `root` could be either a folder or a file
-        imdb.__init__(self, 'bib_detect_' + os.path.basename(root))
+        imdb.__init__(self, 'bib_detect')
         self._root = root
         self._classes = ('__background__', # always index 0
                          'bib')

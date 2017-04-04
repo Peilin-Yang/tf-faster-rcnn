@@ -95,7 +95,6 @@ if __name__ == '__main__':
     print(('Loading model check point from {:s}').format(args.model))
     faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
-    print(faster_rcnn_vars)
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
     print('Loaded.')
