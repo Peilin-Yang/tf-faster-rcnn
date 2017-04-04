@@ -40,12 +40,12 @@ class bib_detect(imdb):
         """
 
         image_index = []
-        if os.path.isdir(args._root):
-            for root, dirs, files in os.walk(args._root):
+        if os.path.isdir(self._root):
+            for root, dirs, files in os.walk(self._root):
                 for name in files:
                     image_index.append(os.path.abspath(os.path.join(root, name)))
-        elif os.path.isfile(args._root):
-            image_index.append(os.path.abspath(args._root))
+        elif os.path.isfile(self._root):
+            image_index.append(os.path.abspath(self._root))
         else:
             raise NameError('Please provide the valid image paths!! Exit...')
 
