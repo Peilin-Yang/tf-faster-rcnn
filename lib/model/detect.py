@@ -243,6 +243,6 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                 print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
                       format(index, dets[k, -1],
                             dets[k, 0] + 1, dets[k, 1] + 1,
-                            dets[k, 2] + 1, dets[k, 3] + 1),
-                            num_recognitions[cls_ind][im_ind][k])
+                            dets[k, 2] + 1, dets[k, 3] + 1,
+                            num_recognitions[cls_ind][im_ind][k]))
 
