@@ -177,6 +177,8 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
     #  (x1, y1, x2, y2, score)
     all_boxes = [[[] for _ in range(num_images)]
          for _ in range(imdb.num_classes)]
+    num_recognitions = [[[] for _ in range(num_images)]
+         for _ in range(imdb.num_classes)]
 
     # timers
     _t = {'im_detect' : Timer(), 'recog': Timer(), 'misc' : Timer()}
@@ -225,9 +227,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                 cropped_blobs = crop_blobs(im, dets)
                 recognitions = num_recognition(sess, num_recog_net, cropped_blobs)
                 for k in xrange(all_boxes[j][i].shape[0]):
-                    print(imdb.image_path_at(i), all_boxes[j][i][k], recognitions[k])
-                    #all_boxes[j][i][k].append(recognitions[k])
-
+                    num_recognitions[j][i].append(recognitions[k]))
 
     for cls_ind, cls in enumerate(imdb.classes):
         if cls == '__background__':
@@ -240,8 +240,8 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
             # the VOCdevkit expects 1-based indices
             for k in xrange(dets.shape[0]):
                 print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
-                      format(index, dets[k, -2],
+                      format(index, dets[k, -1],
                             dets[k, 0] + 1, dets[k, 1] + 1,
                             dets[k, 2] + 1, dets[k, 3] + 1),
-                            dets[k, -1])
+                            num_recognitions[cls_ind][im_ind][k])
 
