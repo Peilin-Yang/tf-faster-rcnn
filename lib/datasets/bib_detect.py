@@ -6,9 +6,7 @@
 # --------------------------------------------------------
 
 import os
-import json
 from datasets.imdb import imdb
-from fast_rcnn.config import cfg
 
 class bib_detect(imdb):
     def __init__(self, root): # `root` could be either a folder or a file
