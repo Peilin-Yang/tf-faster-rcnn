@@ -94,13 +94,13 @@ if __name__ == '__main__':
                             tag='default', anchor_scales=cfg.ANCHOR_SCALES)
     faster_rcnn_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
-    print(tf.global_variables())
+    print([v.name for v in tf.global_variables()])
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
 
     num_recog_net = BibRecogNetwork(args.max_per_image)
     num_recog_net.build_network()
-    print(tf.global_variables())
+    print([v.name for v in tf.global_variables()])
     exit()
     num_recog_vars = [v for v in tf.global_variables() 
                           if v.name.startswith(faster_rcnn_prefix)]
