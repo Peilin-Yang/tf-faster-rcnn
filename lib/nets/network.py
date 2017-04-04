@@ -42,6 +42,15 @@ class Network(object):
     self._train_summaries = []
     self._event_summaries = {}
 
+    # bib related
+    self._cropped_w = 64
+    self._cropped_h = 64
+    self._cropped_dims = (img_w, img_h)
+    self._cropped_SEED = 66478
+    self._cropped_num_channels = 3
+    self._cropped_num_labels = 5
+    # bib related
+
   def _add_image_summary(self, image, boxes):
     # add back mean
     image += cfg.PIXEL_MEANS
@@ -282,6 +291,10 @@ class Network(object):
     self._mode = mode
     self._anchor_scales = anchor_scales
     self._num_scales = len(anchor_scales)
+
+    # bib related 
+    self._cropped_images = tf.placeholder(tf.float32, shape=[None, self._cropped_w, self._cropped_h, 3])
+    # bib related
 
     training = mode == 'TRAIN'
     testing = mode == 'TEST'
