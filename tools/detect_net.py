@@ -77,8 +77,10 @@ if __name__ == '__main__':
     # load network
     if args.faster_rcnn_net == 'vgg16':
       faster_rcnn_net = vgg16(batch_size=1)
+      faster_rcnn_prefix = 'vgg_16'
     elif args.faster_rcnn_net == 'res101':
       faster_rcnn_net = Resnet101(batch_size=1)
+      faster_rcnn_prefix = 'res_101'
     else:
       raise NotImplementedError
     # load model
@@ -92,7 +94,7 @@ if __name__ == '__main__':
     print(args.faster_rcnn_net)
     print(len(args.model), args.model)
     faster_rcnn_vars = [v.name for v in tf.global_variables() 
-                          if v.name.startswith(unicode(args.faster_rcnn_net))]
+                          if v.name.startswith(faster_rcnn_prefix)]
     print(faster_rcnn_vars)
     faster_rcnn_saver = tf.train.Saver(faster_rcnn_vars)
     faster_rcnn_saver.restore(sess, args.model[0])
