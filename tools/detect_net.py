@@ -16,9 +16,50 @@ import pprint
 import time, os, sys
 
 import tensorflow as tf
+import matplotlib.pyplot as plt
 from nets.vgg16 import vgg16
 from nets.res101 import Resnet101
 from nets.numrecog import BibRecogNetwork
+
+
+def visualization(res_fn, thresh=0.05, img_root=''):
+    thresh = float(thresh)
+    with open(res_fn) as f:
+      for line in f:
+        line = line.strip()
+        if line:
+          row = line.split()
+          img_fn = os.path.join(img_root, row[0])
+          im = cv2.imread(img_fn)
+          if row[1] > thresh:
+            vis_detections(im, row[1:])
+
+def vis_detections(im, dets):
+    """Draw detected bounding boxes."""
+    im = im[:, :, (2, 1, 0)]
+    fig, ax = plt.subplots(figsize=(12, 12))
+    ax.imshow(im, aspect='equal')
+    score = dets[0]
+    bbox = [float(x) for x in dets[1:5]]
+    if len(dets) == 6:
+      num_recog = dets[5]
+
+    ax.add_patch(
+        plt.Rectangle((bbox[0], bbox[1]),
+                      bbox[2] - bbox[0],
+                      bbox[3] - bbox[1], fill=False,
+                      edgecolor='red', linewidth=3.5)
+        )
+    ax.text(bbox[0], bbox[1] - 2,
+            '{:s}({:.3f})'.format(num_recog, score),
+            bbox=dict(facecolor='blue', alpha=0.5),
+            fontsize=14, color='white')
+
+    ax.set_title('')
+    plt.axis('off')
+    plt.tight_layout()
+    plt.draw()
+
 
 def parse_args():
   """
@@ -33,10 +74,10 @@ def parse_args():
             help='model(s) to test. If provided one model then we \
             only do Faster R-CNN. If two models are provided then \
             we do both Faster R-CNN and BibRecognition',
-            required=True, type=str, nargs='+')
+            type=str, nargs='+')
   parser.add_argument('--source_files', dest='source_files',
             help='file or folder of the to be detected image(s)',
-            required=True, type=str)
+            type=str)
   parser.add_argument('--output_fn', dest='output_fn',
             help='output file path',
             default=None, type=str)
@@ -49,6 +90,12 @@ def parse_args():
   parser.add_argument('--faster_rcnn_net', dest='faster_rcnn_net',
                       help='vgg16 or res101',
                       default='res101', type=str)
+  
+  parser.add_argument('--vis', dest='vis',
+                        help='visualization the detection results from file', 
+                        default=None,
+                        nargs='+') # [result_file, thres, images_root(for filename prefix)]
+
   parser.add_argument('--set', dest='set_cfgs',
                         help='set config keys', default=None,
                         nargs=argparse.REMAINDER)
@@ -65,6 +112,10 @@ if __name__ == '__main__':
 
     print('Called with args:')
     print(args)
+
+    if args.vis:
+      vis_detections(*args.vis)
+      exit()
 
     if args.cfg_file is not None:
       cfg_from_file(args.cfg_file)
