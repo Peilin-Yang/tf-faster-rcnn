@@ -40,7 +40,6 @@ class bib_detect(imdb):
         """
 
         image_index = []
-        print(self._root)
         if os.path.isdir(self._root):
             for root, dirs, files in os.walk(self._root):
                 for name in files:
