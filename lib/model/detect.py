@@ -239,6 +239,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
               continue
             # the VOCdevkit expects 1-based indices
             for k in xrange(dets.shape[0]):
+                print(dets[k])
                 print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
                       format(index, dets[k, -1],
                             dets[k, 0] + 1, dets[k, 1] + 1,
