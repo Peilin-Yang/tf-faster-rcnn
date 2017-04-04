@@ -38,7 +38,7 @@ def parse_args():
   parser.add_argument('--tag', dest='tag',
                         help='tag of the model',
                         default='', type=str)
-  parser.add_argument('--faster_rcnn_net', dest='net',
+  parser.add_argument('--faster_rcnn_net', dest='faster_rcnn_net',
                       help='vgg16 or res101',
                       default='res101', type=str)
   parser.add_argument('--set', dest='set_cfgs',
