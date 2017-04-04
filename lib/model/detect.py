@@ -168,7 +168,7 @@ def num_recognition(sess, num_recog_net, blobs):
     return all_recognitions
 
 def detect(sess, faster_rcnn_net, imdb, num_recog_net=None, 
-      max_per_image=100, thresh=0.05):
+      max_per_image=100, thresh=0.05, output_fn=None):
     np.random.seed(cfg.RNG_SEED)
     """Test a Fast R-CNN network on an image database."""
     num_images = len(imdb.image_index)
@@ -231,19 +231,31 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                     num_recognitions[j][i].append(recognitions[k])
             _t['recog'].toc()
 
+    if output_fn:
+        of = open(output_fn, 'w')
+
     for cls_ind, cls in enumerate(imdb.classes):
         if cls == '__background__':
             continue        
-        print('Writing detection results file for class {}'.format(cls))
+        # print('Writing detection results file for class {}'.format(cls))
         for im_ind, index in enumerate(imdb.image_index):
             dets = all_boxes[cls_ind][im_ind]
             if dets == []:
                 continue
             # the VOCdevkit expects 1-based indices
             for k in xrange(dets.shape[0]):
-                print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}'.
+                if output_fn:
+                    of.write('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}\n'.
                       format(index, dets[k, -1],
                             dets[k, 0] + 1, dets[k, 1] + 1,
                             dets[k, 2] + 1, dets[k, 3] + 1,
                             num_recognitions[cls_ind][im_ind][k]))
+                else:
+                    print('{:s} {:.3f} {:.1f} {:.1f} {:.1f} {:.1f} {:s}'.
+                          format(index, dets[k, -1],
+                                dets[k, 0] + 1, dets[k, 1] + 1,
+                                dets[k, 2] + 1, dets[k, 3] + 1,
+                                num_recognitions[cls_ind][im_ind][k]))
+    if output_fn:
+        of.close()
 

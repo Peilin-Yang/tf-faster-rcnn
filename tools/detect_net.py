@@ -37,6 +37,9 @@ def parse_args():
   parser.add_argument('--source_files', dest='source_files',
             help='file or folder of the to be detected image(s)',
             required=True, type=str)
+  parser.add_argument('--output_fn', dest='output_fn',
+            help='output file path',
+            default=None, type=str)
   parser.add_argument('--num_dets', dest='max_per_image',
             help='max number of detections per image',
             default=100, type=int)
@@ -108,6 +111,7 @@ if __name__ == '__main__':
 
     imdb = bib_detect(args.source_files)
     detect(sess, faster_rcnn_net, imdb, 
+        output_fn=args.output_fn,
         num_recog_net=num_recog_net, 
         max_per_image=args.max_per_image)
 
