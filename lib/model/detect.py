@@ -140,7 +140,7 @@ def _non_max_suppression_fast(boxes, overlapThresh):
 
   # return only the bounding boxes that were picked using the
   # integer data type
-  return boxes[pick].astype("int")
+  return boxes[pick]
 
 def im_detect(sess, net, im):
   blobs, im_scales = _get_blobs(im)
@@ -274,8 +274,9 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
 
         # merge the overlapping boxes
         for j in range(1, imdb.num_classes):
-          print(all_boxes[j][i])
-          print(_non_max_suppression_fast(all_boxes[j][i][:,:4], 0))
+          #print(all_boxes[j][i])
+          non_overlapping_boxes = _non_max_suppression_fast(all_boxes[j][i][:,:4], 0)
+          all_boxes[j][i][:,:4] = non_overlapping_boxes
 
 
         _t['misc'].toc()
