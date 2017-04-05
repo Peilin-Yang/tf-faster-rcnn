@@ -137,6 +137,7 @@ def _non_max_suppression_fast(boxes, overlapThresh):
     # delete all indexes from the index list that have
     idxs = np.delete(idxs, np.concatenate(([last],
        np.where(overlap > overlapThresh)[0])))
+    print(idxs)
 
   # return only the bounding boxes that were picked using the
   # integer data type
@@ -274,8 +275,6 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
 
         # merge the overlapping boxes
         for j in range(1, imdb.num_classes):
-          print(all_boxes[j][i])
-          print(cv2.groupRectangles(all_boxes[j][i][:,:4], 0, 0.2))
           non_overlapping_boxes = _non_max_suppression_fast(all_boxes[j][i][:,:4], 0)
           all_boxes[j][i][:,:4] = non_overlapping_boxes
 
