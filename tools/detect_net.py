@@ -63,7 +63,7 @@ def parse_args():
 
 if __name__ == '__main__':
     boxes = [[10, 10, 50, 70], [8, 10, 30, 20], [90, 90, 99, 99]]
-    print(_remove_overlapping_boxes(boxes)
+    print(_remove_overlapping_boxes(boxes))
 
     exit()
 
