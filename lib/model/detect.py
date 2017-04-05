@@ -300,11 +300,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
 
         # merge the overlapping boxes
         for j in range(1, imdb.num_classes):
-          print(all_boxes[j][i][:,:4])
-          non_overlapping_boxes = _remove_overlapping_boxes(all_boxes[j][i][:,:4])
-          print(non_overlapping_boxes)
-          all_boxes[j][i][:,:4] = non_overlapping_boxes
-
+          all_boxes[j][i] = _remove_overlapping_boxes(all_boxes[j][i])
 
         _t['misc'].toc()
 
