@@ -160,8 +160,8 @@ def _remove_overlapping_boxes(boxes):
       if _rect_overlaps( box, cluster ):
         matched = True
         cluster[0] = min(cluster[0], box[0])
-        cluster[1] = max(cluster[2], box[2])
-        cluster[2] = min(cluster[1], box[1])
+        cluster[2] = max(cluster[2], box[2])
+        cluster[1] = min(cluster[1], box[1])
         cluster[3] = max(cluster[3], box[3])
     if not matched:
       clusters.append( box )
