@@ -274,11 +274,11 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
                     all_boxes[j][i] = all_boxes[j][i][keep, :]
 
         # merge the overlapping boxes
-        for j in range(1, imdb.num_classes):
-          print(all_boxes[j][i][:,:4])
-          non_overlapping_boxes = _non_max_suppression_fast(all_boxes[j][i][:,:4], 0)
-          print(non_overlapping_boxes)
-          all_boxes[j][i][:,:4] = non_overlapping_boxes
+        # for j in range(1, imdb.num_classes):
+        #   print(all_boxes[j][i][:,:4])
+        #   non_overlapping_boxes = _non_max_suppression_fast(all_boxes[j][i][:,:4], 0)
+        #   print(non_overlapping_boxes)
+        #   all_boxes[j][i][:,:4] = non_overlapping_boxes
 
 
         _t['misc'].toc()
