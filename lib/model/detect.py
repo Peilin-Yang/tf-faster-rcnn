@@ -274,7 +274,7 @@ def detect(sess, faster_rcnn_net, imdb, num_recog_net=None,
 
         # merge the overlapping boxes
         for j in range(1, imdb.num_classes):
-          print(all_boxes[j][i][:,[:4]])
+          print(all_boxes[j][i])
           print(_non_max_suppression_fast(all_boxes[j][i][:,[:4]]))
 
 
