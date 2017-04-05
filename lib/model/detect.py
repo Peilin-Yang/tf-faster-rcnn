@@ -137,11 +137,39 @@ def _non_max_suppression_fast(boxes, overlapThresh):
     # delete all indexes from the index list that have
     idxs = np.delete(idxs, np.concatenate(([last],
        np.where(overlap > overlapThresh)[0])))
-    print(idxs)
 
   # return only the bounding boxes that were picked using the
   # integer data type
   return boxes[pick]
+
+def _range_overlap(a_min, a_max, b_min, b_max):
+  '''Neither range is completely greater than the other
+  '''
+  return (a_min <= b_max) and (b_min <= a_max)
+
+def _rect_overlaps(box1, box2):
+  return _range_overlap(box1[0], box1[2], box2[0], box2[2]) 
+      and _range_overlap(box1[1], box1[3], box2[1], box2[3])
+
+def _remove_overlapping_boxes(boxes):
+  clusters = []
+
+  for box in boxes:
+    matched = False
+    for cluster in clusters:
+      if _rect_overlaps( box, cluster ):
+        matched = True
+        cluster[0] = min(cluster[0], box[0])
+        cluster[1] = max(cluster[2], box[2])
+        cluster[2] = min(cluster[1], box[1])
+        cluster[3] = max(cluster[3], box[3])
+    if not matched:
+      clusters.append( box )
+
+  return clusters
+
+boxes = [[10, 10, 50, 70], [8, 10, 30, 20], [90, 90, 99, 99]]
+print _remove_overlapping_boxes(boxes)
 
 def im_detect(sess, net, im):
   blobs, im_scales = _get_blobs(im)
