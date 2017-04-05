@@ -9,7 +9,7 @@ from __future__ import print_function
 
 import _init_paths
 from datasets.bib_detect import bib_detect
-from model.detect import detect
+from model.detect import detect, _remove_overlapping_boxes
 from model.config import cfg, cfg_from_file, cfg_from_list
 import argparse
 import pprint
@@ -62,6 +62,11 @@ def parse_args():
   return args
 
 if __name__ == '__main__':
+    boxes = [[10, 10, 50, 70], [8, 10, 30, 20], [90, 90, 99, 99]]
+    print(_remove_overlapping_boxes(boxes)
+
+    exit()
+
     args = parse_args()
 
     print('Called with args:')
