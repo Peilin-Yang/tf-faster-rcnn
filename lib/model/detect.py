@@ -148,7 +148,7 @@ def _range_overlap(a_min, a_max, b_min, b_max):
   return (a_min <= b_max) and (b_min <= a_max)
 
 def _rect_overlaps(box1, box2):
-  return _range_overlap(box1[0], box1[2], box2[0], box2[2]) 
+  return _range_overlap(box1[0], box1[2], box2[0], box2[2]) \
       and _range_overlap(box1[1], box1[3], box2[1], box2[3])
 
 def _remove_overlapping_boxes(boxes):
