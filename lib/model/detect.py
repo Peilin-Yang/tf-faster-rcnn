@@ -166,7 +166,7 @@ def _remove_overlapping_boxes(boxes):
     if not matched:
       clusters.append( box )
 
-  return clusters
+  return np.array(clusters)
 
 def im_detect(sess, net, im):
   blobs, im_scales = _get_blobs(im)
